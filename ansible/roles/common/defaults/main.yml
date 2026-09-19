@@ -1,0 +1,41 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: common
+# Default variables
+#
+# These can be overridden in group_vars or host_vars.
+# ─────────────────────────────────────────────────────────────
+
+# System timezone
+common_timezone: "America/Mexico_City"
+
+# Base packages to install on every host
+common_packages:
+  - vim
+  - curl
+  - wget
+  - git
+  - htop
+  - tree
+  - net-tools
+  - bind-utils
+  - telnet
+  - bash-completion
+  - python3-pip
+  - firewalld
+
+# Whether to keep the system fully updated
+common_update_packages: true
+
+# Firewalld settings
+common_firewalld_enabled: true
+common_firewalld_state: started
+
+# SELinux settings
+common_selinux_state: enforcing
+common_selinux_policy: targeted
+
+# User configuration
+common_admin_user: vagrant
+common_admin_groups:
+  - wheel

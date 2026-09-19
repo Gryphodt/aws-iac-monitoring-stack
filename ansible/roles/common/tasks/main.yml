@@ -1,0 +1,46 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: common
+# Tasks
+#
+# Base configuration applied to every host in the inventory.
+# ─────────────────────────────────────────────────────────────
+
+- name: Update all packages to their latest version
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  when: common_update_packages
+  tags: [packages, update]
+
+- name: Install base packages
+  ansible.builtin.dnf:
+    name: "{{ common_packages }}"
+    state: present
+  tags: [packages]
+
+- name: Set system timezone
+  community.general.timezone:
+    name: "{{ common_timezone }}"
+  tags: [timezone]
+
+- name: Ensure firewalld is installed and running
+  ansible.builtin.systemd:
+    name: firewalld
+    state: "{{ common_firewalld_state }}"
+    enabled: "{{ common_firewalld_enabled }}"
+  tags: [firewalld]
+
+- name: Ensure SELinux is in enforcing mode
+  ansible.posix.selinux:
+    state: "{{ common_selinux_state }}"
+    policy: "{{ common_selinux_policy }}"
+  when: ansible_selinux.status is defined
+  tags: [selinux]
+
+- name: Ensure admin user is in the wheel group
+  ansible.builtin.user:
+    name: "{{ common_admin_user }}"
+    groups: "{{ common_admin_groups }}"
+    append: true
+  tags: [users]

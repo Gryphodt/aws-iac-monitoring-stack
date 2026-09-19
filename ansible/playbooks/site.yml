@@ -1,0 +1,14 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Playbook: site.yml
+#
+# Main playbook. Applies all roles to all hosts.
+# Run with: ansible-playbook playbooks/site.yml
+# ─────────────────────────────────────────────────────────────
+
+- name: Apply common configuration to all hosts
+  hosts: all
+  become: true
+  roles:
+    - common
+
