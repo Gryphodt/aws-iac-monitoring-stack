@@ -1,0 +1,15 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Playbook: ping.yml
+#
+# Verifies Ansible can connect to all hosts in the inventory
+# via SSH and run the Python interpreter.
+# ─────────────────────────────────────────────────────────────
+
+- name: Verify Ansible connectivity
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Ping all hosts
+      ansible.builtin.ping:
