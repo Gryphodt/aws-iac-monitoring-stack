@@ -1,0 +1,78 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: apache
+# Tasks
+#
+# Installs and configures Apache HTTP Server on RHEL/Rocky.
+# ─────────────────────────────────────────────────────────────
+
+- name: Install Apache HTTP Server
+  ansible.builtin.dnf:
+    name: "{{ apache_package }}"
+    state: present
+  tags: [apache, packages]
+
+- name: Set global ServerName
+  ansible.builtin.copy:
+    content: |
+      # Managed by Ansible - role: apache
+      ServerName {{ apache_server_name }}
+    dest: "{{ apache_conf_d }}/servername.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart httpd
+  tags: [apache, config]
+
+- name: Configure mod_status for monitoring
+  ansible.builtin.template:
+    src: status.conf.j2
+    dest: "{{ apache_conf_d }}/status.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart httpd
+  tags: [apache, config, monitoring]
+
+- name: Create virtual host configuration
+  ansible.builtin.template:
+    src: vhost.conf.j2
+    dest: "{{ apache_conf_d }}/{{ apache_server_name }}.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart httpd
+  tags: [apache, config]
+
+- name: Deploy index.html
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ apache_document_root }}/index.html"
+    owner: "{{ apache_document_root_owner }}"
+    group: "{{ apache_document_root_group }}"
+    mode: '0644'
+  tags: [apache, content]
+
+- name: Open HTTP in firewalld
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  loop: "{{ apache_firewall_ports }}"
+  tags: [apache, firewall]
+
+- name: Ensure port 443 is closed (will be reopened when TLS is configured)
+  ansible.posix.firewalld:
+    port: 443/tcp
+    permanent: true
+    state: disabled
+    immediate: true
+  tags: [apache, firewall]
+
+- name: Ensure Apache is running and enabled
+  ansible.builtin.systemd:
+    name: "{{ apache_service }}"
+    state: started
+    enabled: true
+  tags: [apache, service]

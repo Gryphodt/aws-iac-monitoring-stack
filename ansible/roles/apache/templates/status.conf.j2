@@ -1,19 +1,14 @@
----
 # ─────────────────────────────────────────────────────────────
-# Playbook: site.yml
+# Apache mod_status configuration
 #
-# Main playbook. Applies all roles to all hosts.
-# Run with: ansible-playbook playbooks/site.yml
+# Managed by Ansible - role: apache
+# Exposes server status for monitoring (Apache Exporter).
 # ─────────────────────────────────────────────────────────────
 
-- name: Apply common configuration to all hosts
-  hosts: all
-  become: true
-  roles:
-    - common
+<Location /server-status>
+    SetHandler server-status
+    Require local
+    Require ip 192.168.56.0/24
+</Location>
 
-- name: Configure web servers
-  hosts: webservers
-  become: true
-  roles:
-    - apache
+ExtendedStatus On

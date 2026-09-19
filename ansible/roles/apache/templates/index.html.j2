@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IaC Monitoring Stack - Web Server</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        h1 { color: #4CAF50; }
+        .info {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .info p { margin: 8px 0; }
+        code {
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+    <h1> IaC Monitoring Stack</h1>
+    <div class="info">
+        <p><strong>Server:</strong> <code>{{ ansible_facts.hostname }}</code></p>
+        <p><strong>FQDN:</strong> <code>{{ ansible_facts.fqdn }}</code></p>
+        <p><strong>IP:</strong> <code>{{ ansible_facts.default_ipv4.address | default('N/A') }}</code></p>
+        <p><strong>OS:</strong> <code>{{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}</code></p>
+        <p><strong>Managed by:</strong> <code>Ansible</code></p>
+    </div>
+    <p>This page is deployed automatically by the <code>apache</code> role.</p>
+    <p>Monitoring available at: <code>/server-status</code> (internal only)</p>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IaC Monitoring Stack - Web Server</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        h1 { color: #4CAF50; }
+        .info {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .info p { margin: 8px 0; }
+        code {
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+    <h1> IaC Monitoring Stack</h1>
+    <div class="info">
+        <p><strong>Server:</strong> <code>{{ ansible_facts.hostname }}</code></p>
+	<p><strong>FQDN:</strong> <code>{{ ansible_facts.fqdn }}</code></p>
+	<p><strong>IP:</strong> <code>{{ ansible_facts.default_ipv4.address | default('N/A') }}</code></p>
+	<p><strong>OS:</strong> <code>{{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}</code></p>
+    </div>
+    <p>This page is deployed automatically by the <code>apache</code> role.</p>
+    <p>Monitoring available at: <code>/server-status</code> (internal only)</p>
+</body>
+</html>

@@ -1,19 +1,10 @@
 ---
 # ─────────────────────────────────────────────────────────────
-# Playbook: site.yml
-#
-# Main playbook. Applies all roles to all hosts.
-# Run with: ansible-playbook playbooks/site.yml
+# Role: apache
+# Handlers
 # ─────────────────────────────────────────────────────────────
 
-- name: Apply common configuration to all hosts
-  hosts: all
-  become: true
-  roles:
-    - common
-
-- name: Configure web servers
-  hosts: webservers
-  become: true
-  roles:
-    - apache
+- name: Restart httpd
+  ansible.builtin.systemd:
+    name: "{{ apache_service }}"
+    state: restarted

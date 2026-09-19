@@ -1,0 +1,30 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: apache
+# Default variables
+# ─────────────────────────────────────────────────────────────
+
+# Package and service names for RHEL/Rocky
+apache_package: httpd
+apache_service: httpd
+
+# Directories (RHEL layout)
+apache_config_dir: /etc/httpd
+apache_conf_d: /etc/httpd/conf.d
+apache_document_root: /var/www/html
+apache_log_dir: /var/log/httpd
+
+# User and group (RHEL uses 'apache')
+apache_user: apache
+apache_group: apache
+
+# Ports to open in firewalld
+# 443/tcp will be added in a future phase when TLS is configured
+apache_firewall_ports:
+  - 80/tcp
+
+# Virtual host configuration
+apache_server_name: "web.local"
+apache_server_admin: "admin@web.local"
+apache_document_root_owner: apache
+apache_document_root_group: apache

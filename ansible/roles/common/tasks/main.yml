@@ -35,7 +35,7 @@
   ansible.posix.selinux:
     state: "{{ common_selinux_state }}"
     policy: "{{ common_selinux_policy }}"
-  when: ansible_selinux.status is defined
+  when: ansible_facts.selinux.status is defined
   tags: [selinux]
 
 - name: Ensure admin user is in the wheel group
