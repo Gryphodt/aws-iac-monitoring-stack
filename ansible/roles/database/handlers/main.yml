@@ -1,0 +1,10 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: database
+# Handlers
+# ─────────────────────────────────────────────────────────────
+
+- name: Restart mariadb
+  ansible.builtin.systemd:
+    name: "{{ database_service }}"
+    state: restarted

@@ -1,0 +1,48 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: database
+# Tasks
+#
+# Installs and configures MariaDB on RHEL/Rocky.
+# ─────────────────────────────────────────────────────────────
+
+- name: Install MariaDB server, client, and Python bindings
+  ansible.builtin.dnf:
+    name:
+      - "{{ database_package }}"
+      - "{{ database_client_package }}"
+      - "{{ database_python_package }}"
+    state: present
+  tags: [database, packages]
+
+- name: Ensure MariaDB is running and enabled
+  ansible.builtin.systemd:
+    name: "{{ database_service }}"
+    state: started
+    enabled: true
+  tags: [database, service]
+
+- name: Create application database
+  ansible.mariadb.mariadb_db:
+    name: "{{ database_name }}"
+    state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
+  tags: [database, config]
+
+- name: Create application database user
+  ansible.mariadb.mariadb_user:
+    name: "{{ database_user }}"
+    password: "{{ database_password }}"
+    priv: "{{ database_name }}.*:ALL"
+    host: "%"
+    state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
+  tags: [database, config, users]
+
+- name: Open MariaDB port in firewalld (private network only)
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="ipv4" source address="{{ database_allowed_network }}" port protocol="tcp" port="{{ database_port }}" accept'
+    permanent: true
+    state: enabled
+    immediate: true
+  tags: [database, firewall]

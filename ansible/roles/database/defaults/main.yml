@@ -1,0 +1,25 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: database
+# Default variables
+# ─────────────────────────────────────────────────────────────
+
+# Package and service names for RHEL/Rocky
+database_package: mariadb-server
+database_client_package: mariadb
+database_service: mariadb
+database_python_package: python3-PyMySQL
+
+# Network configuration
+database_bind_address: "0.0.0.0"
+database_port: 3306
+database_allowed_network: "192.168.56.0/24"
+
+# Application database and user
+# NOTE: Override these in group_vars/dbservers/vault.yml with Ansible Vault
+database_name: appdb
+database_user: appuser
+database_password: "changeme_in_vault"
+
+# Firewall
+database_firewall_zone: public

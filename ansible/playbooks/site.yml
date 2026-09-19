@@ -17,3 +17,9 @@
   become: true
   roles:
     - apache
+
+- name: Configure database servers
+  hosts: dbservers
+  become: true
+  roles:
+    - database
