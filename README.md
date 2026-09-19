@@ -13,8 +13,10 @@ Demonstrate hands-on expertise with automation and Infrastructure as Code
 tools through a real, reproducible, and well-documented project.
 
 ## 🏗️ Architecture
+
 ┌─────────────────────────────────────────────────────────┐
 │ Kali Linux (control node) │
+
 │ - Ansible, Terraform, Vagrant, Docker, LocalStack │
 └─────────────────────────────────────────────────────────┘
 │
@@ -122,31 +124,45 @@ Username: admin
 
 Password: see ansible/group_vars/all/vault.yml
 
- Documentation
+
+Documentation
 Setup Guide
 
 Architecture
 
 Technical Decisions
 
- Roadmap
+Roadmap
 ☑ Initial project structure
+
 □ Vagrantfile for 3 local VMs (web, db, monitoring)
+
 □ Ansible inventory and base configuration
+
 □ common role (baseline server setup)
+
 □ apache role (web server)
+
 □ database role (MySQL)
+
 □ node_exporter role
+
 □ prometheus role
+
 □ apache_exporter role
+
 □ grafana role
+
 □ CI/CD pipeline with GitHub Actions
+
 □ Terraform + LocalStack (Phase 2)
+
 □ Migration guide to AWS (Phase 3)
 
- Contributing
+
+Contributing
 This is a personal portfolio project, but suggestions and feedback are
 welcome. Feel free to open an issue or submit a PR.
 
- License
+License
 MIT
