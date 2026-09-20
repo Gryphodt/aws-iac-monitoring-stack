@@ -1,0 +1,10 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Variables for all hosts
+# ─────────────────────────────────────────────────────────────
+
+# Hosts file entries for local name resolution
+lab_hosts:
+  - { ip: "192.168.56.10", name: "web" }
+  - { ip: "192.168.56.20", name: "db" }
+  - { ip: "192.168.56.30", name: "monitoring" }

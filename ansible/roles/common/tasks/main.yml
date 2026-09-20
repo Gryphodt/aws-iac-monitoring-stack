@@ -44,3 +44,12 @@
     groups: "{{ common_admin_groups }}"
     append: true
   tags: [users]
+
+- name: Ensure lab hosts are in /etc/hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: "^{{ item.ip }}\\s+"
+    line: "{{ item.ip }} {{ item.name }}"
+    state: present
+  loop: "{{ lab_hosts }}"
+  tags: [hosts, common]

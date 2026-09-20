@@ -119,11 +119,11 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "apache_uptime_seconds_total",
+          "expr": "time() - node_boot_time_seconds{instance=\"web\"}",
           "refId": "A"
         }
       ],
-      "title": "Uptime",
+      "title": "VM Uptime",
       "type": "stat"
     },
     {
@@ -485,5 +485,5 @@
   "timezone": "browser",
   "title": "Apache (Custom)",
   "uid": "apache-custom",
-  "version": 2
+  "version": 3
 }
