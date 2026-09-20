@@ -22,6 +22,16 @@
     state: present
   tags: [grafana, packages]
 
+- name: Deploy Grafana main configuration
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+    owner: root
+    group: grafana
+    mode: '0640'
+  notify: Restart grafana
+  tags: [grafana, config]
+
 - name: Create Grafana provisioning directories
   ansible.builtin.file:
     path: "{{ item }}"
@@ -65,25 +75,15 @@
   notify: Restart grafana
   tags: [grafana, dashboards]
 
-- name: Copy Apache dashboard
+- name: Copy Apache custom dashboard
   ansible.builtin.copy:
-    src: dashboards/apache.json
-    dest: "{{ grafana_dashboards_dir }}/apache.json"
+    src: dashboards/apache-custom.json
+    dest: "{{ grafana_dashboards_dir }}/apache-custom.json"
     owner: grafana
     group: grafana
     mode: '0644'
   notify: Restart grafana
   tags: [grafana, dashboards]
-
-- name: Configure Grafana admin credentials
-  ansible.builtin.template:
-    src: grafana.ini.j2
-    dest: /etc/grafana/grafana.ini
-    owner: root
-    group: grafana
-    mode: '0640'
-  notify: Restart grafana
-  tags: [grafana, config]
 
 - name: Open Grafana port in firewalld (private network only)
   ansible.posix.firewalld:
