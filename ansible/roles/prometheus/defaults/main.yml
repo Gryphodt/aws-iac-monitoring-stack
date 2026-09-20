@@ -1,0 +1,35 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: prometheus
+# Default variables
+# ─────────────────────────────────────────────────────────────
+
+# Prometheus version and download URL
+prometheus_version: "2.54.1"
+prometheus_arch: "linux-amd64"
+prometheus_download_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.{{ prometheus_arch }}.tar.gz"
+
+# Installation paths
+prometheus_bin_path: /usr/local/bin/prometheus
+prometheus_config_dir: /etc/prometheus
+prometheus_data_dir: /var/lib/prometheus
+prometheus_user: prometheus
+prometheus_group: prometheus
+
+# Network
+prometheus_port: 9090
+prometheus_listen_address: "0.0.0.0"
+
+# Scrape configuration
+prometheus_scrape_interval: "15s"
+prometheus_evaluation_interval: "15s"
+
+# Retention
+prometheus_retention_time: "15d"
+prometheus_retention_size: "10GB"
+
+# Firewall
+prometheus_allowed_network: "192.168.56.0/24"
+
+# Systemd
+prometheus_service_name: prometheus

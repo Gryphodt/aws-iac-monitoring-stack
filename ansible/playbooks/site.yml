@@ -30,3 +30,9 @@
   become: true
   roles:
     - database
+
+- name: Configure monitoring servers
+  hosts: monitoringservers
+  become: true
+  roles:
+    - prometheus

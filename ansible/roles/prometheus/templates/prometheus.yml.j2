@@ -1,0 +1,37 @@
+# ─────────────────────────────────────────────────────────────
+# Prometheus configuration
+#
+# Managed by Ansible - role: prometheus
+# ─────────────────────────────────────────────────────────────
+
+global:
+  scrape_interval: {{ prometheus_scrape_interval }}
+  evaluation_interval: {{ prometheus_evaluation_interval }}
+
+# ─────────────────────────────────────────────────────────────
+# Scrape configurations
+# ─────────────────────────────────────────────────────────────
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:{{ prometheus_port }}']
+
+  # Node Exporter on all hosts
+  - job_name: 'node_exporter'
+    static_configs:
+{% for host in groups['all'] %}
+      - targets: ['{{ hostvars[host].ansible_host | default(host) }}:9100']
+        labels:
+          instance: '{{ host }}'
+{% endfor %}
+
+  # Apache Exporter on web servers
+  - job_name: 'apache_exporter'
+    static_configs:
+{% for host in groups['webservers'] %}
+      - targets: ['{{ hostvars[host].ansible_host | default(host) }}:9117']
+        labels:
+          instance: '{{ host }}'
+{% endfor %}

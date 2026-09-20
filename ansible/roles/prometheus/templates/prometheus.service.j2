@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────────────────────
+# Prometheus systemd unit
+#
+# Managed by Ansible - role: prometheus
+# ─────────────────────────────────────────────────────────────
+
+[Unit]
+Description=Prometheus Monitoring System
+Documentation=https://prometheus.io/docs/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+ExecStart={{ prometheus_bin_path }} \
+  --config.file={{ prometheus_config_dir }}/prometheus.yml \
+  --storage.tsdb.path={{ prometheus_data_dir }} \
+  --storage.tsdb.retention.time={{ prometheus_retention_time }} \
+  --storage.tsdb.retention.size={{ prometheus_retention_size }} \
+  --web.listen-address={{ prometheus_listen_address }}:{{ prometheus_port }} \
+  --web.enable-lifecycle
+
+ExecReload=/bin/sh -c 'curl -s -X POST http://localhost:{{ prometheus_port }}/-/reload'
+
+Restart=on-failure
+RestartSec=5s
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ReadWritePaths={{ prometheus_data_dir }}
+
+[Install]
+WantedBy=multi-user.target
