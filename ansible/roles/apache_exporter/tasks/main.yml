@@ -1,0 +1,67 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: apache_exporter
+# Tasks
+#
+# Installs Prometheus Apache Exporter from upstream binary.
+# ─────────────────────────────────────────────────────────────
+
+- name: Create apache_exporter system user
+  ansible.builtin.user:
+    name: "{{ apache_exporter_user }}"
+    system: true
+    shell: /sbin/nologin
+    create_home: false
+  tags: [apache_exporter, users]
+
+- name: Download apache_exporter tarball
+  ansible.builtin.get_url:
+    url: "{{ apache_exporter_download_url }}"
+    dest: "/tmp/apache_exporter-{{ apache_exporter_version }}.{{ apache_exporter_arch }}.tar.gz"
+    mode: '0644'
+  tags: [apache_exporter, install]
+
+- name: Extract apache_exporter binary
+  ansible.builtin.unarchive:
+    src: "/tmp/apache_exporter-{{ apache_exporter_version }}.{{ apache_exporter_arch }}.tar.gz"
+    dest: /tmp
+    remote_src: true
+    creates: "/tmp/apache_exporter-{{ apache_exporter_version }}.{{ apache_exporter_arch }}/apache_exporter"
+  tags: [apache_exporter, install]
+
+- name: Copy apache_exporter binary to /usr/local/bin
+  ansible.builtin.copy:
+    src: "/tmp/apache_exporter-{{ apache_exporter_version }}.{{ apache_exporter_arch }}/apache_exporter"
+    dest: "{{ apache_exporter_bin_path }}"
+    owner: root
+    group: root
+    mode: '0755'
+    remote_src: true
+  notify: Restart apache_exporter
+  tags: [apache_exporter, install]
+
+- name: Deploy apache_exporter systemd unit
+  ansible.builtin.template:
+    src: apache_exporter.service.j2
+    dest: "/etc/systemd/system/{{ apache_exporter_service_name }}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart apache_exporter
+  tags: [apache_exporter, config]
+
+- name: Open apache_exporter port in firewalld (private network only)
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="ipv4" source address="{{ apache_exporter_allowed_network }}" port protocol="tcp" port="{{ apache_exporter_port }}" accept'
+    permanent: true
+    state: enabled
+    immediate: true
+  tags: [apache_exporter, firewall]
+
+- name: Ensure apache_exporter is running and enabled
+  ansible.builtin.systemd:
+    name: "{{ apache_exporter_service_name }}"
+    state: started
+    enabled: true
+    daemon_reload: true
+  tags: [apache_exporter, service]

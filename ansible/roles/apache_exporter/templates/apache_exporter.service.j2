@@ -1,0 +1,29 @@
+# ─────────────────────────────────────────────────────────────
+# Apache Exporter systemd unit
+#
+# Managed by Ansible - role: apache_exporter
+# ─────────────────────────────────────────────────────────────
+
+[Unit]
+Description=Prometheus Apache Exporter
+Documentation=https://github.com/Lusitaniae/apache_exporter
+After=network-online.target httpd.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ apache_exporter_user }}
+Group={{ apache_exporter_group }}
+ExecStart={{ apache_exporter_bin_path }} --scrape_uri={{ apache_exporter_apache_uri }} --telemetry.address=:{{ apache_exporter_port }}
+Restart=on-failure
+RestartSec=5s
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

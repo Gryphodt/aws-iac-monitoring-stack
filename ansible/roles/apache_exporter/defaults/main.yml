@@ -1,0 +1,28 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: apache_exporter
+# Default variables
+# ─────────────────────────────────────────────────────────────
+
+# Apache Exporter version and download URL
+apache_exporter_version: "0.11.0"
+apache_exporter_arch: "linux-amd64"
+apache_exporter_download_url: "https://github.com/Lusitaniae/apache_exporter/releases/download/v{{ apache_exporter_version }}/apache_exporter-{{ apache_exporter_version }}.{{ apache_exporter_arch }}.tar.gz"
+
+# Installation paths
+apache_exporter_bin_path: /usr/local/bin/apache_exporter
+apache_exporter_user: apache_exporter
+apache_exporter_group: apache_exporter
+
+# Network
+apache_exporter_port: 9117
+apache_exporter_listen_address: "0.0.0.0"
+
+# Apache connection
+apache_exporter_apache_uri: "http://localhost/server-status?auto"
+
+# Firewall
+apache_exporter_allowed_network: "192.168.56.0/24"
+
+# Systemd
+apache_exporter_service_name: apache_exporter

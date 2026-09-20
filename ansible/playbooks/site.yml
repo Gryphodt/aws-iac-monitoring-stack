@@ -23,6 +23,7 @@
   become: true
   roles:
     - apache
+    - apache_exporter
 
 - name: Configure database servers
   hosts: dbservers
