@@ -1,0 +1,15 @@
+# ─────────────────────────────────────────────────────────────
+# Grafana datasources
+#
+# Managed by Ansible - role: grafana
+# ─────────────────────────────────────────────────────────────
+
+apiVersion: 1
+
+datasources:
+  - name: {{ grafana_prometheus_name }}
+    type: prometheus
+    access: proxy
+    url: {{ grafana_prometheus_url }}
+    isDefault: true
+    editable: false

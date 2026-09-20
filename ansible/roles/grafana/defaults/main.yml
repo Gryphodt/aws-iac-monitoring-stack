@@ -1,0 +1,35 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: grafana
+# Default variables
+# ─────────────────────────────────────────────────────────────
+
+# Grafana repository
+grafana_repo_name: grafana
+grafana_repo_baseurl: "https://rpm.grafana.com"
+grafana_repo_gpgkey: "https://rpm.grafana.com/gpg.key"
+grafana_package: grafana
+
+# Service
+grafana_service: grafana-server
+
+# Network
+grafana_port: 3000
+grafana_listen_address: "0.0.0.0"
+
+# Admin credentials (override in vault.yml)
+grafana_admin_user: admin
+grafana_admin_password: "admin"
+
+# Provisioning paths
+grafana_provisioning_dir: /etc/grafana/provisioning
+grafana_datasources_dir: /etc/grafana/provisioning/datasources
+grafana_dashboards_provider_dir: /etc/grafana/provisioning/dashboards
+grafana_dashboards_dir: /var/lib/grafana/dashboards
+
+# Prometheus datasource
+grafana_prometheus_url: "http://localhost:9090"
+grafana_prometheus_name: Prometheus
+
+# Firewall
+grafana_allowed_network: "192.168.56.0/24"

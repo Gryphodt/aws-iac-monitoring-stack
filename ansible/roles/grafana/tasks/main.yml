@@ -1,0 +1,102 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: grafana
+# Tasks
+#
+# Installs Grafana from the official RPM repository.
+# ─────────────────────────────────────────────────────────────
+
+- name: Add Grafana repository
+  ansible.builtin.yum_repository:
+    name: "{{ grafana_repo_name }}"
+    description: Grafana RPM Repository
+    baseurl: "{{ grafana_repo_baseurl }}"
+    gpgkey: "{{ grafana_repo_gpgkey }}"
+    gpgcheck: true
+    enabled: true
+  tags: [grafana, repo]
+
+- name: Install Grafana
+  ansible.builtin.dnf:
+    name: "{{ grafana_package }}"
+    state: present
+  tags: [grafana, packages]
+
+- name: Create Grafana provisioning directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: grafana
+    group: grafana
+    mode: '0755'
+  loop:
+    - "{{ grafana_datasources_dir }}"
+    - "{{ grafana_dashboards_provider_dir }}"
+    - "{{ grafana_dashboards_dir }}"
+  tags: [grafana, config]
+
+- name: Deploy Prometheus datasource
+  ansible.builtin.template:
+    src: datasource.yml.j2
+    dest: "{{ grafana_datasources_dir }}/prometheus.yml"
+    owner: grafana
+    group: grafana
+    mode: '0640'
+  notify: Restart grafana
+  tags: [grafana, config, datasource]
+
+- name: Deploy dashboards provider
+  ansible.builtin.template:
+    src: dashboards.yml.j2
+    dest: "{{ grafana_dashboards_provider_dir }}/default.yml"
+    owner: grafana
+    group: grafana
+    mode: '0640'
+  notify: Restart grafana
+  tags: [grafana, config, dashboards]
+
+- name: Copy Node Exporter Full dashboard
+  ansible.builtin.copy:
+    src: dashboards/node-exporter-full.json
+    dest: "{{ grafana_dashboards_dir }}/node-exporter-full.json"
+    owner: grafana
+    group: grafana
+    mode: '0644'
+  notify: Restart grafana
+  tags: [grafana, dashboards]
+
+- name: Copy Apache dashboard
+  ansible.builtin.copy:
+    src: dashboards/apache.json
+    dest: "{{ grafana_dashboards_dir }}/apache.json"
+    owner: grafana
+    group: grafana
+    mode: '0644'
+  notify: Restart grafana
+  tags: [grafana, dashboards]
+
+- name: Configure Grafana admin credentials
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+    owner: root
+    group: grafana
+    mode: '0640'
+  notify: Restart grafana
+  tags: [grafana, config]
+
+- name: Open Grafana port in firewalld (private network only)
+  ansible.posix.firewalld:
+    rich_rule: 'rule family="ipv4" source address="{{ grafana_allowed_network }}" port protocol="tcp" port="{{ grafana_port }}" accept'
+    permanent: true
+    state: enabled
+    immediate: true
+  tags: [grafana, firewall]
+
+- name: Ensure Grafana is running and enabled
+  ansible.builtin.systemd:
+    name: "{{ grafana_service }}"
+    state: started
+    enabled: true
+    daemon_reload: true
+  tags: [grafana, service]
