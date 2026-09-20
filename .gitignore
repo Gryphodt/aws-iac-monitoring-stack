@@ -85,3 +85,10 @@ secrets.yml
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# LocalStack
+.localstack/
+localstack-data/
+volume/
+*.auth-token
+.env.localstack
