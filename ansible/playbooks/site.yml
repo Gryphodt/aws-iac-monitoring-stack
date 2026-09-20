@@ -12,6 +12,12 @@
   roles:
     - common
 
+- name: Install node_exporter on all hosts
+  hosts: all
+  become: true
+  roles:
+    - node_exporter
+
 - name: Configure web servers
   hosts: webservers
   become: true

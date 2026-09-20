@@ -1,0 +1,32 @@
+# ─────────────────────────────────────────────────────────────
+# Node Exporter systemd unit
+#
+# Managed by Ansible - role: node_exporter
+# ─────────────────────────────────────────────────────────────
+
+[Unit]
+Description=Prometheus Node Exporter
+Documentation=https://github.com/prometheus/node_exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ node_exporter_user }}
+Group={{ node_exporter_group }}
+ExecStart={{ node_exporter_bin_path }} \
+  --web.listen-address={{ node_exporter_listen_address }}:{{ node_exporter_port }}
+Restart=on-failure
+RestartSec=5s
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

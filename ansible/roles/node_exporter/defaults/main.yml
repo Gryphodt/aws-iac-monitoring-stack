@@ -1,0 +1,25 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: node_exporter
+# Default variables
+# ─────────────────────────────────────────────────────────────
+
+# Node Exporter version and download URL
+node_exporter_version: "1.8.2"
+node_exporter_arch: "linux-amd64"
+node_exporter_download_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.{{ node_exporter_arch }}.tar.gz"
+
+# Installation paths
+node_exporter_bin_path: /usr/local/bin/node_exporter
+node_exporter_user: node_exporter
+node_exporter_group: node_exporter
+
+# Network
+node_exporter_port: 9100
+node_exporter_listen_address: "0.0.0.0"
+
+# Firewall
+node_exporter_allowed_network: "192.168.56.0/24"
+
+# Systemd
+node_exporter_service_name: node_exporter
